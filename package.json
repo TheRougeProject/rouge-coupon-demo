@@ -1,0 +1,53 @@
+{
+  "name": "rouge-coupon-demo",
+  "version": "0.2.3",
+  "description": "The Rouge Project - coupon demo Dapp",
+  "author": "Valentin Guillois <vdg@rouge.network>",
+  "license": "GPL-3.0-only",
+  "keywords": [
+    "ethereum",
+    "web3",
+    "vue",
+    "vuex",
+    "nuxt",
+    "rouge.js",
+    "rge",
+    "testnet",
+    "demo",
+    "coupon"
+  ],
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "test": "jest",
+    "precommit": "yarn run lint"
+  },
+  "dependencies": {
+    "@nuxtjs/font-awesome": "^1.0.4",
+    "nuxt": "^2.9.2",
+    "vue-ethereum": "^0.3.0",
+    "rouge.js": "0.2.9"
+  },
+  "devDependencies": {
+    "@nuxtjs/eslint-config": "^1.1.2",
+    "@nuxtjs/style-resources": "^0.1.2",
+    "@vue/test-utils": "^1.0.0-beta.27",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-eslint": "^10.0.3",
+    "babel-jest": "^24.9.0",
+    "eslint": "^5.15.3",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-loader": "^2.1.2",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "eslint-plugin-vue": "^5.2.2",
+    "jest": "^24.9.0",
+    "nodemon": "^1.19.3",
+    "vue-jest": "^4.0.0-0"
+  }
+}
