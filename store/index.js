@@ -106,7 +106,6 @@ export const actions = {
   async updateAccount ({ commit, dispatch }) {
     const rouge = this.$rouge()
     commit('reset_all')
-    console.log('new account...', rouge, rouge.account$)
     commit('set_account', rouge.account$.address)
     const balance = await rouge.RGE$.balanceOf(rouge.account$.address)
     commit('set_rgeBalance', balance.toString())
@@ -114,10 +113,12 @@ export const actions = {
   },
   async createCampaign (store, params) {
     const rouge = this.$rouge()
-    if (!rouge) {
-      console.log(`Issuer ${rouge.account$.address} creating new campaign...`, params)
-      return rouge.createCampaign(params)
-    }
+    if (!rouge) return Promise.reject(new Error('rouge not set up'))
+    console.log(`Issuer ${rouge.account$.address} creating new campaign...`)
+    return rouge.createCampaign({
+      auths: [ rouge.AUTH$.Acquisition, rouge.AUTH$.Redemption ],
+      ...params
+    })
   },
   async load_all_campaigns ({ dispatch, state }) {
     const rouge = this.$rouge()

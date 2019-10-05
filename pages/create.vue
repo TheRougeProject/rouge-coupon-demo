@@ -104,8 +104,6 @@ import { mapGetters } from 'vuex'
 import Loading from '~/components/Loading.vue'
 import SideBar from '~/components/SideBar.vue'
 
-import { RougeProtocol } from 'rouge.js'
-
 export default {
   components: {
     Loading, SideBar
@@ -165,9 +163,9 @@ export default {
           name: this.name,
           expiration: Math.trunc((new Date()).getTime() / 1000) + 60 * 60 * 24 * 7, // 7 days
           attestor: this.attestor,
-          auths: [ RougeProtocol.AUTH$.Acquisition, RougeProtocol.AUTH$.Redemption ]
         }
         const campaign = await this.$store.dispatch('createCampaign', params)
+        console.log(campaign)
 
         this.$children[0].finish()
         this.message = `Congrats! Campaign created and ${this.issuance} coupon(s) issued at address ${await campaign.address}...`
