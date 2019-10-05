@@ -11263,10 +11263,10 @@ vue-eslint-parser@^5.0.0:
     esquery "^1.0.1"
     lodash "^4.17.11"
 
-vue-ethereum@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/vue-ethereum/-/vue-ethereum-0.3.0.tgz#971c369c0ae6057769eb3d01b95059d291c89384"
-  integrity sha512-kZ0XY33LlbOn97WNZDrEJ4FBXNNzIFmB0Y+aQHntiCAxPm1SoR+MV/a3JxD8BP2DdTGuexhNOYgfwBnEJqAe4g==
+vue-ethereum@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/vue-ethereum/-/vue-ethereum-0.3.1.tgz#7e289b5faf7d6920e600fdeb781d655a95bc20b4"
+  integrity sha512-i7zY5ldzfvKA84dZ4pPSJnefn9p6aQtBcsu7bKNPdo+O8Lp6A/ioU+QH33R83xQrfv8cMt6qt40UU+OXcOZoqQ==
 
 vue-hot-reload-api@^2.3.0:
   version "2.3.4"

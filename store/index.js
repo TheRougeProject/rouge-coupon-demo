@@ -3,11 +3,6 @@ import Vue from 'vue'
 
 import Web3 from 'web3'
 
-import { RougeProtocol } from 'rouge.js'
-
-let $eth = null
-let rouge = null
-
 export const state = () => ({
   versionSupported: '0.17.0',
   web3Error: null,
@@ -66,7 +61,7 @@ export const getters = {
   attestorPkey:  state => state.attestorPkey,
   rougeVersion: state => state.rougeVersion,
   factoryAddress: state => state.factoryAddress ? Web3.utils.toChecksumAddress(state.factoryAddress) : null,
-  account: state => state.account,
+  account: state => state.account ? Web3.utils.toChecksumAddress(state.account) : null,
   rgeBalance: state => state.rgeBalance,
   campaignData: state => address => state.campaignData[address] || { address: address, issued: false },
   allCampaigns: (state, getters) => state.campaigns.map( a => getters.campaignData(a) ),
@@ -83,19 +78,22 @@ export const getters = {
 }
 
 export const actions = {
-  init ({  state, dispatch}, eth) {
-    $eth = eth
-    if (!$eth.isConnected || state.campaigns.length < 1) {
-      $eth.on('connected', () => dispatch('updateContext'))
+  nuxtServerInit () {
+    // auto init ?
+  },
+  init ({ dispatch, state }, $eth) {
+    if (!$eth.isConnected) {
+      $eth.on('connected',  () => dispatch('updateContext'))
       $eth.on('networkChanged', () => dispatch('updateContext'))
       $eth.on('accountsChanged', () => dispatch('updateAccount'))
       $eth.connect()
+    } else if ($eth.isConnected && state.campaigns.length < 1) {
+      // retry
+      dispatch('updateContext')
     }
   },
-  // TODO async updateAccount ({ getters, commit, state, dispatch }) {
-  async updateContext ({ getters, commit, state, dispatch }) {
-    console.log('reloading campaign context...')
-    rouge = RougeProtocol(new Web3( $eth.web3.currentProvider ))
+  async updateContext ({ getters, state, commit, dispatch }) {
+    const rouge = this.$rouge()
     commit('set_rougeVersion', await rouge.factory$.version)
     if (state.versionSupported !== getters.rougeVersion) {
       console.log(`PROTOCOL ERROR, found version ${getters.rougeVersion} != ${state.versionSupported}`)
@@ -106,19 +104,23 @@ export const actions = {
     dispatch('updateAccount')
   },
   async updateAccount ({ commit, dispatch }) {
+    const rouge = this.$rouge()
     commit('reset_all')
-    console.log('new account...')
-    commit('set_account', $eth.selectedAddress)
-    rouge = RougeProtocol(new Web3( $eth.web3.currentProvider )).as($eth.selectedAddress)
-    const balance = await rouge.RGE$.balanceOf($eth.selectedAddress)
+    console.log('new account...', rouge, rouge.account$)
+    commit('set_account', rouge.account$.address)
+    const balance = await rouge.RGE$.balanceOf(rouge.account$.address)
     commit('set_rgeBalance', balance.toString())
     dispatch('load_all_campaigns')
   },
   async createCampaign (store, params) {
-    console.log(`Issuer ${rouge.account$.address} creating new campaign...`, params)
-    return rouge.createCampaign(params)
+    const rouge = this.$rouge()
+    if (!rouge) {
+      console.log(`Issuer ${rouge.account$.address} creating new campaign...`, params)
+      return rouge.createCampaign(params)
+    }
   },
   async load_all_campaigns ({ dispatch, state }) {
+    const rouge = this.$rouge()
     if (!rouge) {
       console.log('abort load_campaigns: rouge not set up')
       return
@@ -131,6 +133,7 @@ export const actions = {
     }
   },
   async load_campaign ({ getters, commit, state }, address) {
+    const rouge = this.$rouge()
     if (!rouge) {
       console.log('abort load_campaign: rouge not set up')
       return

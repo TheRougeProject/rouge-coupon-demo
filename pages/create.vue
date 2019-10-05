@@ -124,12 +124,9 @@ export default {
     ...mapGetters([ 'web3Error', 'account', 'scheme', 'web3Version', 'attestor', 'rgeBalance' ]),
   },
   mounted () {
-    this.init()
+    this.$store.dispatch('init', this.$eth)
   },
   methods: {
-    init: async function () {
-      await this.$store.dispatch('init', this.$eth)
-    },
     tokenformat: function (n) {
       if (n === null) {
         return '?'

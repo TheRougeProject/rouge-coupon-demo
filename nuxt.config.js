@@ -24,6 +24,7 @@ module.exports = {
     ]
   },
   plugins: [
+    '~/plugins/rouge.js'
   ],
   router: {
   },
@@ -34,8 +35,8 @@ module.exports = {
   /*
   ** Customize the progress-bar color
   */
-  loading: '~components/Loading.vue',
-  // loading: { color: '#3B8070' },
+  //loading: '~/components/Loading.vue',
+  loading: { color: '#3B8070' },
   /*
   ** Build configuration
   */

@@ -135,23 +135,21 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([ 'web3Error', 'rouge', 'allCampaigns', 'totalIssuance', 'totalFree', 'totalRedeemed', 'coupons', 'acquired', 'redeemed', 'attestor', 'attestorPkey', 'account' ]),
+    ...mapGetters([ 'web3Error', 'allCampaigns', 'totalIssuance', 'totalFree', 'totalRedeemed', 'coupons', 'acquired', 'redeemed', 'attestor', 'attestorPkey', 'account' ]),
   },
   mounted () {
-    this.init()
+    this.$store.dispatch('init', this.$eth)
   },
   methods: {
-    init: async function () {
-      await this.$store.dispatch('init', this.$eth)
-    },
     acquireCoupon: async function (coupon) {
+      const rouge = this.$rouge()
       this.message = ''
       this.msg = []
       try {
         if (!this.account || coupon.expired || coupon.has ) return false
 
         const sign = authHashProtocolSig('acceptAcquisition', coupon.at, this.account, '0x' + this.attestorPkey)
-        const campaign = this.rouge.campaign$(coupon.at)
+        const campaign = rouge.campaign$(coupon.at)
 
         if (!await campaign.as(this.attestor).canDistribute) {
           throw new Error('attestor is not authorized')
@@ -168,13 +166,14 @@ export default {
       this.$store.dispatch('load_campaign', coupon.at)
     },
     redeemCoupon: async function (coupon) {
+      const rouge = this.$rouge()
       this.message = ''
       this.msg = []
       try {
         if (!this.account || coupon.expired || coupon.used ) return false
         console.log(this.account, coupon.at)
         const sign = authHashProtocolSig('acceptRedemption', coupon.at, this.account, '0x' + this.attestorPkey)
-        const campaign = this.rouge.campaign$(coupon.at)
+        const campaign = rouge.campaign$(coupon.at)
 
         if (!await campaign.as(this.attestor).canSignRedemption) {
           throw new Error('attestor is not authorized')
