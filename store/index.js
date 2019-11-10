@@ -4,7 +4,7 @@ import Vue from 'vue'
 import Web3 from 'web3'
 
 export const state = () => ({
-  versionSupported: '0.17.0',
+  versionSupported: '0.20',
   web3Error: null,
   // gasCreate: 5000778,
   // this is a demo, this is obviously not a recommended method
@@ -105,6 +105,7 @@ export const actions = {
   },
   async updateAccount ({ commit, dispatch }) {
     const rouge = this.$rouge()
+    if (!rouge) return Promise.reject(new Error('rouge not set up'))
     commit('reset_all')
     commit('set_account', rouge.account$.address)
     const balance = await rouge.RGE$.balanceOf(rouge.account$.address)
